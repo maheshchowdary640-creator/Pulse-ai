@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PulseDesk AI - Autonomous Customer Support & Feedback Intelligence</title>
+  <meta name="description" content="PulseDesk AI is a next-generation AI support desk platform powered by autonomous ticket triaging, RAG knowledge retrieval, and real-time sentiment radar.">
+  <link rel="stylesheet" href="styles/main.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+</head>
+<body>
+
+  <div id="app">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="brand-container">
+        <div class="brand-logo">⚡</div>
+        <div>
+          <div class="brand-title">PulseDesk AI</div>
+          <span class="brand-badge">PRO PLATFORM</span>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        <a href="#" class="nav-item active" data-view="dashboard" id="nav-dashboard">
+          <span class="icon">📊</span>
+          <span>Dashboard</span>
+        </a>
+        <a href="#" class="nav-item" data-view="inbox" id="nav-inbox">
+          <span class="icon">📥</span>
+          <span>AI Desk Queue</span>
+        </a>
+        <a href="#" class="nav-item" data-view="knowledge" id="nav-knowledge">
+          <span class="icon">📚</span>
+          <span>Knowledge & RAG</span>
+        </a>
+        <a href="#" class="nav-item" data-view="automation" id="nav-automation">
+          <span class="icon">🤖</span>
+          <span>AI Studio</span>
+        </a>
+        <a href="#" class="nav-item" data-view="simulator" id="nav-simulator">
+          <span class="icon">🚀</span>
+          <span>Ticket Simulator</span>
+        </a>
+        <a href="#" class="nav-item" data-view="admin" id="nav-admin">
+          <span class="icon">⚙️</span>
+          <span>Admin & Test Suite</span>
+        </a>
+        <a href="#" class="nav-item" data-view="docs" id="nav-docs">
+          <span class="icon">📖</span>
+          <span>Documentation</span>
+        </a>
+      </nav>
+
+      <div class="user-profile-widget">
+        <div class="avatar">SJ</div>
+        <div class="user-info">
+          <span class="user-name">Sarah Jenkins</span>
+          <span class="user-role">VP Customer Success</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Workspace Area -->
+    <div class="main-wrapper">
+      <!-- Top Navigation Header -->
+      <header class="top-header">
+        <div class="header-search">
+          <span>🔍</span>
+          <input type="text" id="global-search-input" placeholder="Search tickets, customers, RAG docs...">
+        </div>
+
+        <div class="header-actions">
+          <div class="status-indicator">
+            <span class="status-dot"></span>
+            <span>AI Vector Engine Online</span>
+          </div>
+
+          <button class="btn btn-sm btn-primary" id="btn-quick-simulate">
+            <span>⚡ Simulate Ingress</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- View Container (Target for SPA Router) -->
+      <main class="view-container" id="view-container">
+        <!-- Views dynamically injected here -->
+      </main>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Modal Overlay Window -->
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal-box">
+      <!-- Dynamic modal content -->
+    </div>
+  </div>
+
+  <!-- App Core Script -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
