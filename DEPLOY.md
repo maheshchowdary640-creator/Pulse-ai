@@ -1,91 +1,112 @@
-# 🚀 PulseDesk AI — Production Deployment Guide
+# 🚀 PulseDesk AI — Full-Stack Deployment Guide
+## 🎨 Frontend on Vercel + ⚙️ Backend on Render
 
-This document provides step-by-step instructions to deploy **PulseDesk AI** to modern cloud platforms including **Render.com**, GitHub Pages, Vercel, Netlify, Cloudflare Pages, Nginx, and Docker.
+This guide walks you through deploying **PulseDesk AI** using industry best-practice decoupled cloud architecture:
+- **Frontend**: Hosted on **Vercel** (Global Edge CDN, automatic HTTPS, fast static asset delivery).
+- **Backend Service**: Hosted on **Render.com** (Python Web Service running on dynamic `$PORT` with CORS enabled).
 
 ---
 
-## 🛠️ Render Backend Deployment Guide (Render.com)
+## 🏗️ Architecture Blueprint
 
-Render allows you to host the PulseDesk AI Web Service / Backend API for free with automatic SSL certificate generation and GitHub auto-deployments.
+```
+ ┌─────────────────────────────────────────┐          ┌─────────────────────────────────────────┐
+ │            FRONTEND (Vercel)            │          │           BACKEND (Render.com)          │
+ │  https://pulse-ai.vercel.app            │ ───────► │  https://pulsedesk-backend.onrender.com │
+ │  HTML5 + Glassmorphic CSS + ES Modules  │ REST API │  Python Web Server + Vector RAG Engine  │
+ └─────────────────────────────────────────┘          └─────────────────────────────────────────┘
+```
 
-### Method 1: Deploying via Render Dashboard (Recommended)
+---
 
-1. **Log in to Render**:
-   Go to [https://dashboard.render.com](https://dashboard.render.com) and log in with your GitHub account.
+## ⚙️ STEP 1: Deploy Backend to Render.com
 
-2. **Create a New Web Service**:
-   - Click the **New +** button in the top right.
-   - Select **Web Service**.
+First, deploy the Python web service to Render so you have your live backend API URL.
 
-3. **Connect GitHub Repository**:
-   - Select **Connect a repository**.
-   - Search for and select: `maheshchowdary640-creator/Pulse-ai`.
-
-4. **Configure Web Service Settings**:
-   - **Name**: `pulsedesk-ai-backend` (or your preferred name)
-   - **Region**: Choose the closest region (e.g. Oregon, Frankfurt, Singapore)
+### Option A: Via Render Dashboard (Recommended)
+1. Go to [https://dashboard.render.com](https://dashboard.render.com) and log in with your GitHub account.
+2. Click **New +** > **Web Service**.
+3. Connect your GitHub repository: `maheshchowdary640-creator/Pulse-ai`.
+4. Configure service settings:
+   - **Name**: `pulsedesk-backend`
+   - **Region**: Choose your preferred region (e.g., Oregon, Frankfurt, Singapore)
    - **Branch**: `main`
-   - **Root Directory**: Leave blank (default)
    - **Runtime**: `Python 3`
-   - **Build Command**: *(Leave empty or enter `pip install --upgrade pip`)*
+   - **Build Command**: *(Leave empty)*
    - **Start Command**: `python start_server.py`
    - **Instance Type**: `Free`
+5. Click **Create Web Service**.
+6. Once deployed, copy your backend URL (e.g. `https://pulsedesk-backend.onrender.com`).
 
-5. **Deploy Service**:
-   - Click **Create Web Service**.
-   - Render will deploy your repository automatically and assign a production HTTPS URL (e.g., `https://pulsedesk-ai-backend.onrender.com`).
-
----
-
-### Method 2: Deploying via Render Blueprint (1-Click YAML)
-
-PulseDesk AI includes a pre-configured `render.yaml` blueprint file.
-
+### Option B: Via Render Blueprint (1-Click YAML)
 1. Go to [https://dashboard.render.com/blueprints](https://dashboard.render.com/blueprints).
-2. Click **New Blueprint Instance**.
-3. Connect your repository `maheshchowdary640-creator/Pulse-ai`.
-4. Render will read `render.yaml` automatically and configure the Python web service.
-5. Click **Apply**.
+2. Connect `maheshchowdary640-creator/Pulse-ai`.
+3. Render reads `render.yaml` automatically. Click **Apply**.
 
 ---
 
-## 📋 Other Deployment Options
+## 🎨 STEP 2: Deploy Frontend to Vercel
 
-### Option 2: Deploy to GitHub Pages (Free Static Hosting)
+Next, deploy the static frontend application to Vercel's global CDN.
 
-1. Go to repository: [https://github.com/maheshchowdary640-creator/Pulse-ai](https://github.com/maheshchowdary640-creator/Pulse-ai)
-2. Go to **Settings** > **Pages**.
-3. Under **Build and deployment**, select **Source**: `Deploy from a branch`.
-4. Select **Branch**: `main`, Folder: `/ (root)`.
-5. Click **Save**.
-   Published URL: `https://maheshchowdary640-creator.github.io/Pulse-ai/`
+### Option A: Via Vercel Web Dashboard (Recommended)
+1. Go to [https://vercel.com/dashboard](https://vercel.com/dashboard) and log in with GitHub.
+2. Click **Add New...** > **Project**.
+3. Select **Import** next to `maheshchowdary640-creator/Pulse-ai`.
+4. Project Configuration:
+   - **Framework Preset**: `Other`
+   - **Root Directory**: `./`
+   - **Build Command**: *(Leave empty)*
+   - **Output Directory**: `./`
+5. Under **Environment Variables**, add:
+   - **Key**: `API_BASE_URL`
+   - **Value**: `https://pulsedesk-backend.onrender.com` (Your Render URL from Step 1)
+6. Click **Deploy**.
+7. Vercel will build and assign your production frontend URL (e.g. `https://pulse-ai.vercel.app`).
 
----
-
-### Option 3: Deploy to Vercel
-
+### Option B: Via Vercel CLI
 ```bash
+# Install Vercel CLI
 npm install -g vercel
+
+# Login & Deploy
+vercel login
 vercel --prod
 ```
 
 ---
 
-### Option 4: Deploy with Docker & Nginx
+## 🔌 STEP 3: Verify Frontend ↔ Backend Connection
 
+1. Open your live Vercel Frontend URL (`https://pulse-ai.vercel.app`).
+2. Navigate to **Admin & Test Suite**.
+3. Click **⚙️ Run System Diagnostics**.
+4. Confirm **8/8 Diagnostic Tests Pass** with live latency metrics returned from Render backend!
+
+---
+
+## 📋 Alternative Deployment Options
+
+### GitHub Pages (Static Single-Host)
+1. Go to GitHub repo **Settings** > **Pages**.
+2. Select **Source**: `Deploy from a branch` -> `main` branch -> `/ (root)` folder.
+3. Live URL: `https://maheshchowdary640-creator.github.io/Pulse-ai/`
+
+### Docker Production Container
 ```bash
 docker build -t pulsedesk-ai .
 docker run -d -p 80:80 --name pulsedesk pulsedesk-ai
 ```
 
----
-
-### Option 5: Local Hosting
-
+### Local Host Development
 ```bash
+# PowerShell Server
+powershell -ExecutionPolicy Bypass -File server.ps1
+
+# Python Server
 python start_server.py
 ```
-Access at: `http://localhost:8000`
+Access locally at: `http://localhost:8000`
 
 ---
 
